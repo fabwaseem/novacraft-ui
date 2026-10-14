@@ -61,7 +61,7 @@ const fadeUp = {
 
 export default function Index() {
   return (
-    <div className="relative overflow-hidden">
+    <main id="main-content" className="relative overflow-hidden">
       {/* Grid background */}
       <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none" />
 
@@ -146,17 +146,17 @@ export default function Index() {
                   Secondary
                 </Button>
               </div>
-              <Input placeholder="Type something futuristic..." />
+              <Input placeholder="Type something futuristic..." aria-label="Preview text" />
               <div className="flex items-center gap-3">
-                <Switch />
-                <span className="text-sm text-muted-foreground">
+                <Switch id="preview-dark-mode" aria-label="Enable dark mode" />
+                <label htmlFor="preview-dark-mode" className="text-sm text-muted-foreground">
                   Enable dark mode
-                </span>
+                </label>
               </div>
             </div>
             <div className="space-y-4">
-              <Slider defaultValue={[65]} className="w-full" />
-              <Progress value={72} className="h-2" />
+              <Slider defaultValue={[65]} className="w-full" aria-label="Preview intensity" />
+              <Progress value={72} className="h-2" aria-label="Preview progress" />
               <div className="flex gap-2 flex-wrap">
                 <Badge className="bg-primary/10 text-primary border-primary/20">
                   Cyan
@@ -226,6 +226,6 @@ export default function Index() {
           </p>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

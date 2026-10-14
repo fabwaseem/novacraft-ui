@@ -296,13 +296,13 @@ export function StyleConfigurator() {
               <h3 className="text-sm font-semibold">Theme Studio</h3>
             </div>
             <div className="flex gap-1">
-              <Button variant="ghost" size="icon-sm" onClick={exportCSS} title="Export CSS">
+              <Button variant="ghost" size="icon-sm" onClick={exportCSS} aria-label="Export CSS">
                 {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
               </Button>
-              <Button variant="ghost" size="icon-sm" onClick={resetAll} title="Reset">
+              <Button variant="ghost" size="icon-sm" onClick={resetAll} aria-label="Reset theme">
                 <RotateCcw className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="ghost" size="icon-sm" onClick={() => setOpen(false)}>
+              <Button variant="ghost" size="icon-sm" onClick={() => setOpen(false)} aria-label="Close theme studio">
                 <X className="h-3.5 w-3.5" />
               </Button>
             </div>

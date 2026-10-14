@@ -13,6 +13,7 @@ import {
   Minus, PanelRight, SidebarIcon, Box, Loader2, ToggleRight,
   Rows, TypeIcon, Hash, Menu, FileText, CircleDashed, FormInput,
   ArrowUpDown, ChevronDown,
+  type LucideIcon,
 } from "lucide-react";
 import { ComponentPreview } from "@/components/ComponentPreview";
 import { CodeBlock } from "@/components/CodeBlock";
@@ -65,7 +66,7 @@ import { Kbd } from "@/components/ui/kbd";
 interface ComponentDef {
   id: string;
   name: string;
-  icon: any;
+  icon: LucideIcon;
   category: string;
   description: string;
   preview: React.ReactNode;
@@ -1556,13 +1557,14 @@ export default function Components() {
   return (
     <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       {/* Sidebar — independent scroll */}
-      <aside className="w-64 border-r border-border hidden md:flex md:flex-col shrink-0">
+      <aside aria-label="Components" className="w-64 border-r border-border hidden md:flex md:flex-col shrink-0">
         <div className="p-4 pb-2">
           <Input
             placeholder="Search components..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="h-9 text-sm"
+            aria-label="Search components"
           />
         </div>
         <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-thin">
@@ -1576,6 +1578,8 @@ export default function Components() {
                   {items.map((c) => (
                     <button
                       key={c.id}
+                      type="button"
+                      aria-current={activeId === c.id ? "page" : undefined}
                       onClick={() => setSearchParams({ c: c.id })}
                       className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors text-left ${
                         activeId === c.id
@@ -1595,7 +1599,7 @@ export default function Components() {
       </aside>
 
       {/* Main Content — independent scroll */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-10">
+      <main id="main-content" className="flex-1 overflow-y-auto p-6 md:p-10">
         <motion.div
           key={active.id}
           initial={{ opacity: 0, y: 10 }}

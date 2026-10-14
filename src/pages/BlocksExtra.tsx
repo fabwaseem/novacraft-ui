@@ -204,7 +204,7 @@ export function NotificationBlocks() {
                 <p className="text-sm font-semibold">{t.title}</p>
                 <p className="text-xs text-muted-foreground">{t.desc}</p>
               </div>
-              <button className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
+              <button type="button" className="text-muted-foreground hover:text-foreground" aria-label={`Dismiss ${t.title} notification`}><X className="h-4 w-4" /></button>
             </div>
           ))}
         </div>
@@ -806,7 +806,7 @@ export function SocialBlocks() {
           <div className="flex gap-2 pt-2 border-t border-border">
             <Avatar size="sm"><AvatarFallback className="text-xs">ME</AvatarFallback></Avatar>
             <Input variant="glass" placeholder="Write a comment..." className="flex-1" />
-            <Button variant="soft" size="icon"><Send className="h-4 w-4" /></Button>
+            <Button variant="soft" size="icon" aria-label="Send comment"><Send className="h-4 w-4" /></Button>
           </div>
         </div>
       </BlockWrapper>
