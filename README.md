@@ -1,74 +1,108 @@
 # NovaCraft UI
 
-A modern, dark-first, futuristic React component library built with TypeScript and Tailwind CSS.
+A dark-first React component library and documentation site. Copy the primitives in `src/components/ui`, theme them with CSS variables, and ship interfaces with glass, glow, and gradient treatments.
 
-![NovaCraft UI](https://novacraft-ui.vercel.app/og-image.png)
+[![CI](https://github.com/fabwaseem/novacraft-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/fabwaseem/novacraft-ui/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-18-149ECA?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+
+![NovaCraft UI home](docs/screenshots/home.png)
 
 ## Features
 
-- **Dark-First Design** - Optimized for dark mode with optional light theme
-- **Glass & Glow Effects** - Beautiful frosted glass and glow effects out of the box
-- **Fully Themeable** - CSS variables power complete customization
-- **Accessible** - ARIA-compliant with keyboard navigation built in
-- **TypeScript** - Full TypeScript support with exported types
-- **Animated** - Micro-interactions and smooth transitions with Framer Motion
-- **Composable** - Build complex UIs from small, reusable primitives
-
-## Documentation
-
-Visit [NovaCraft UI Documentation](https://novacraft-ui.vercel.app) for:
-
-- [Components](https://novacraft-ui.vercel.app/components) - Browse all available components
-- [Themes](https://novacraft-ui.vercel.app/themes) - Customize the theme
-- [Blocks](https://novacraft-ui.vercel.app/blocks) - Pre-built section patterns
-- [Templates](https://novacraft-ui.vercel.app/templates) - Full page templates
+- **Dark-first** — designed for dark mode, with a light theme one toggle away
+- **Glass and glow** — frosted surfaces, glow, gradient, and soft variants on the same primitives
+- **Themeable** — colors, radius, type, and effects are CSS variables you can edit in the theme playground
+- **Accessible** — labeled controls, keyboard support, skip link, and visible focus treatment
+- **Typed** — TypeScript components with exported variant types
+- **Composable** — small primitives that combine into blocks and full-page templates
+- **Copy-paste** — no package lock-in; drop a component into your app
 
 ## Components
 
-NovaCraft UI includes 40+ production-ready components:
+Fifty-four documented components, grouped the same way as the docs site:
 
-- **Form Inputs**: Button, Input, Textarea, Select, Checkbox, Switch, Slider, Radio, Toggle, Input OTP
-- **Layout**: Card, Tabs, Accordion, Resizable Panels, Scroll Area
-- **Navigation**: Breadcrumb, Pagination, Navigation Menu
-- **Feedback**: Alert, Toast, Dialog, Sheet, Tooltip
-- **Data Display**: Table, Avatar, Badge, Calendar
-- **Overlay**: Popover, Hover Card, Context Menu, Command
-- And more...
+| Group | Components |
+| --- | --- |
+| Form inputs | Button, Button Group, Input, Input Group, Textarea, Select, Native Select, Checkbox, Switch, Slider, Radio Group, Toggle, Toggle Group, Input OTP, Label, Field |
+| Layout and navigation | Card, Tabs, Accordion, Breadcrumb, Collapsible, Aspect Ratio, Separator, Resizable, Scroll Area, Navigation Menu, Pagination, Menubar, Calendar |
+| Data display | Table, Data Table, Badge, Avatar, Progress, Skeleton, Spinner, Kbd, Typography, Empty |
+| Feedback and overlays | Toast, Sonner, Alert, Alert Dialog, Tooltip, Popover, Dialog, Sheet, Drawer, Hover Card, Context Menu, Dropdown Menu, Command, Combobox, Date Picker |
 
-## Styling Variants
+`src/components/ui` also includes Form, Chart, Carousel, and Sidebar.
 
-Each component supports multiple visual variants:
+## Screenshots
 
-- Default, Outline, Ghost
-- Glass & Glass Primary
-- Glow, Glow Secondary, Glow Accent
-- Gradient & Gradient Border
-- Soft, Soft Secondary, Soft Destructive
+Home, the component catalog, and the theme playground:
 
-## Tech Stack
+| Home | Components | Themes |
+| --- | --- | --- |
+| ![Home](docs/screenshots/home.png) | ![Components](docs/screenshots/components.png) | ![Themes](docs/screenshots/themes.png) |
 
-- React 18
-- TypeScript
-- Tailwind CSS
-- Radix UI (Primitives)
+## Install
+
+```bash
+git clone https://github.com/fabwaseem/novacraft-ui.git
+cd novacraft-ui
+npm install
+```
+
+```bash
+npm run dev        # docs site at http://localhost:8080
+npm run lint       # eslint
+npm run typecheck  # tsc -b
+npm test           # vitest
+npm run build      # production build
+npm run preview    # serve the production build
+```
+
+## Usage
+
+Copy `src/lib/utils.ts` and the component you need from `src/components/ui`. Point the `@` alias at your source root, and bring over the CSS variables in `src/index.css` (or generate them from the theme playground).
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export function Example() {
+  return (
+    <Button variant="glow" size="lg">
+      Get started
+    </Button>
+  );
+}
+```
+
+Buttons default to `type="button"`. Pass `type="submit"` when the button should submit a form. Variants include `default`, `outline`, `ghost`, `glass`, `glow`, `gradient`, and `soft`.
+
+## Stack
+
+- React 18 and React Router 6
+- TypeScript 5.9
+- Vite 5
+- Tailwind CSS 3 and Radix UI primitives
 - Framer Motion
-- Vite
+- class-variance-authority, clsx, and tailwind-merge
+- Vitest and Testing Library
+
+## Documentation
+
+The site in this repo is the docs:
+
+- `/` — overview
+- `/components` — component previews, usage, and props
+- `/blocks` — section patterns
+- `/templates` — full-page layouts
+- `/themes` — live theme editor
+
+Published docs: [novacraft-ui.vercel.app](https://novacraft-ui.vercel.app)
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
-
-## Author
-
-**Waseem Anjum**
-
-- GitHub: [https://github.com/fabwaseem](https://github.com/fabwaseem)
-- Website: [https://waseemanjum.com](https://waseemanjum.com)
+[MIT](LICENSE) © [Waseem Anjum](https://github.com/fabwaseem)
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-<p align="center">Open source. Copy-paste. Ship faster.</p>
+Open a pull request. CI runs lint, typecheck, tests, and the production build.
