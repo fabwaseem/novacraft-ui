@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { dispatchThemeChange } from "@/components/ThemeToggle";
+import { dispatchThemeChange } from "@/hooks/use-theme";
 
 /* ─── Types ─── */
 interface ColorToken {
@@ -81,6 +81,11 @@ interface ThemeState {
 }
 
 type LockableKey = "primary" | "secondary" | "accent" | "background" | "foreground" | "destructive" | "radius" | "font" | "glowIntensity" | "shadowIntensity" | "sidebar" | "charts" | "status" | "surfaces";
+
+function readThemeString(theme: ThemeState, key: string): string {
+  const value = theme[key as keyof ThemeState];
+  return typeof value === "string" ? value : "";
+}
 
 /* ─── Color token definitions ─── */
 const colorTokenGroups: { group: string; icon: React.ReactNode; description: string; tokens: ColorToken[] }[] = [
@@ -337,7 +342,9 @@ const staggerItem = { initial: { opacity: 0, y: 6 }, animate: { opacity: 1, y: 0
 function LockChip({ label, locked, onToggle }: { label: string; locked: boolean; onToggle: () => void }) {
   return (
     <motion.button
+      type="button"
       onClick={onToggle}
+      aria-pressed={locked}
       whileTap={{ scale: 0.95 }}
       className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all duration-200 ${
         locked
@@ -463,7 +470,7 @@ function ColorGroupPanel({ group, icon, description, tokens, theme, update }: {
                   key={token.key}
                   label={token.label}
                   description={token.description}
-                  value={(theme as any)[token.key] || "0 0% 50%"}
+                  value={readThemeString(theme, token.key) || "0 0% 50%"}
                   onChange={(v) => update({ [token.key]: v })}
                 />
               ))}
@@ -523,7 +530,7 @@ export default function Themes() {
 
     const allColorKeys = colorTokenGroups.flatMap(g => g.tokens.map(t => t.key));
     allColorKeys.forEach(key => {
-      const val = get(key, (theme as any)[key] || "");
+      const val = get(key, readThemeString(theme, key) || "");
       if (val) root.style.setProperty(`--${key}`, val);
     });
 
@@ -577,7 +584,7 @@ export default function Themes() {
 
   const allCSSVars = useMemo(() => {
     const lines = colorTokenGroups.flatMap(g =>
-      g.tokens.map(t => `  --${t.key}: ${(theme as any)[t.key]};`)
+      g.tokens.map(t => `  --${t.key}: ${readThemeString(theme, t.key)};`)
     );
     lines.push(`  --radius: ${theme.radius};`);
     return `:root {\n${lines.join("\n")}\n}`;
@@ -599,15 +606,19 @@ export default function Themes() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <main id="main-content" className="min-h-screen flex flex-col">
       {/* ─── Command bar ─── */}
       <div className="sticky top-16 z-30 border-b border-border/60 bg-background/60 backdrop-blur-2xl">
         <div className="flex items-center justify-between px-3 lg:px-5 h-11">
           {/* Panel tabs */}
-          <div className="flex items-center gap-0.5 bg-muted/40 rounded-lg p-0.5">
+          <div role="tablist" aria-label="Theme panels" className="flex items-center gap-0.5 bg-muted/40 rounded-lg p-0.5">
             {panels.map(p => (
               <motion.button
                 key={p.id}
+                type="button"
+                role="tab"
+                aria-selected={activePanel === p.id}
+                aria-label={p.label}
                 onClick={() => setActivePanel(p.id)}
                 whileTap={{ scale: 0.97 }}
                 className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors duration-150 ${
@@ -645,13 +656,13 @@ export default function Themes() {
             {/* Mode toggle */}
             <div className="flex items-center gap-1.5 bg-muted/40 rounded-lg px-2 py-1 border border-border/30">
               <Moon className={`h-3 w-3 transition-colors duration-200 ${!theme.isLight ? "text-primary" : "text-muted-foreground/40"}`} />
-              <Switch checked={theme.isLight} onCheckedChange={v => update({ isLight: v })} className="scale-[0.65]" />
+              <Switch checked={theme.isLight} onCheckedChange={v => update({ isLight: v })} className="scale-[0.65]" aria-label="Light mode" />
               <Sun className={`h-3 w-3 transition-colors duration-200 ${theme.isLight ? "text-primary" : "text-muted-foreground/40"}`} />
             </div>
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon-sm" onClick={undo} disabled={!history.length} className="text-muted-foreground">
+                <Button variant="ghost" size="icon-sm" onClick={undo} disabled={!history.length} className="text-muted-foreground" aria-label="Undo theme change">
                   <History className="h-3.5 w-3.5" />
                 </Button>
               </TooltipTrigger>
@@ -843,7 +854,7 @@ export default function Themes() {
                             whileTap={{ scale: 0.97 }}
                             onClick={() => update({ [control.key]: o.v })}
                             className={`flex-1 py-2 rounded-lg text-[11px] font-medium border transition-all duration-200 ${
-                              (theme as any)[control.key] === o.v
+                              theme[control.key] === o.v
                                 ? "border-primary bg-primary/10 text-primary shadow-[0_0_8px_hsl(var(--primary)/0.1)]"
                                 : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
                             }`}
@@ -925,9 +936,11 @@ export default function Themes() {
                   <Tooltip key={key}>
                     <TooltipTrigger asChild>
                       <motion.div
+                        role="img"
+                        aria-label={`${key} color`}
                         className="flex-1 cursor-pointer transition-all duration-300"
                         whileHover={{ flex: 2.5 }}
-                        style={{ background: `hsl(${(theme as any)[key]})` }}
+                        style={{ background: `hsl(${readThemeString(theme, key)})` }}
                       />
                     </TooltipTrigger>
                     <TooltipContent side="bottom" className="text-xs capitalize font-medium">{key}</TooltipContent>
@@ -949,7 +962,7 @@ export default function Themes() {
                       animate={{ height: heights[i - 1] }}
                       transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 20 }}
                       className="flex-1 rounded-t-md border border-border/20"
-                      style={{ background: `hsl(${(theme as any)[`chart-${i}`]})` }}
+                      style={{ background: `hsl(${readThemeString(theme, `chart-${i}`)})` }}
                     />
                   );
                 })}
@@ -1146,13 +1159,13 @@ export default function Themes() {
                   <div key={s.var} className="flex items-center gap-3 group">
                     <div
                       className="h-8 w-24 rounded-md border border-border/30 shadow-sm transition-transform group-hover:scale-105"
-                      style={{ background: `hsl(${(theme as any)[s.var]})` }}
+                      style={{ background: `hsl(${readThemeString(theme, s.var)})` }}
                     />
                     <div className="flex-1">
                       <span className="text-xs font-medium">{s.label}</span>
                       <span className="text-[9px] text-muted-foreground block">{s.desc}</span>
                     </div>
-                    <code className="text-[9px] font-mono text-muted-foreground/50 tabular-nums">{(theme as any)[s.var]}</code>
+                    <code className="text-[9px] font-mono text-muted-foreground/50 tabular-nums">{readThemeString(theme, s.var)}</code>
                   </div>
                 ))}
               </div>
@@ -1160,6 +1173,6 @@ export default function Themes() {
           </motion.div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

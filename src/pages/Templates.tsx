@@ -422,7 +422,7 @@ export default function Templates() {
   const isCustomSize = currentWidth !== null;
 
   return (
-    <div className="min-h-[calc(100vh-4rem)]">
+    <main id="main-content" className="min-h-[calc(100vh-4rem)]">
       {selectedTemplate && selectedInfo ? (
         /* ─── Full Preview Mode ─── */
         <div>
@@ -445,6 +445,8 @@ export default function Templates() {
                 {/* View Toggle */}
                 <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-muted/50 border border-border">
                   <button
+                    type="button"
+                    aria-pressed={viewMode === "preview"}
                     onClick={() => setViewMode("preview")}
                     className={cn(
                       "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all",
@@ -454,6 +456,8 @@ export default function Templates() {
                     <Eye className="h-3.5 w-3.5" /> Preview
                   </button>
                   <button
+                    type="button"
+                    aria-pressed={viewMode === "code"}
                     onClick={() => setViewMode("code")}
                     className={cn(
                       "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all",
@@ -473,12 +477,14 @@ export default function Templates() {
                         return (
                           <button
                             key={d}
+                            type="button"
+                            aria-label={`${d} preview`}
+                            aria-pressed={device === d && !previewWidth}
                             onClick={() => handleDeviceClick(d)}
                             className={cn(
                               "flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium transition-all",
                               device === d && !previewWidth ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                             )}
-                            title={d}
                           >
                             <Icon className="h-3.5 w-3.5" />
                           </button>
@@ -666,7 +672,7 @@ export default function Templates() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }
 
@@ -1180,7 +1186,7 @@ function EcommerceTemplate() {
                   <div className="h-36 bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center relative">
                     <ShoppingCart className="h-8 w-8 text-muted-foreground/20" />
                     {p.tag && <Badge variant="glow" className="absolute top-2 left-2 text-[10px]">{p.tag}</Badge>}
-                    <button className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><Heart className="h-4 w-4 text-muted-foreground hover:text-destructive" /></button>
+                    <button type="button" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity focus-visible:opacity-100" aria-label={`Save ${p.name}`}><Heart className="h-4 w-4 text-muted-foreground hover:text-destructive" /></button>
                   </div>
                   <div className="p-3 space-y-1">
                     <h3 className="font-medium text-sm">{p.name}</h3>
@@ -1528,10 +1534,10 @@ function ChatTemplate() {
 
         {/* Input */}
         <div className="border-t border-border p-3 flex items-center gap-2">
-          <Button variant="ghost" size="icon-sm"><Plus className="h-4 w-4" /></Button>
-          <Input variant="glass" placeholder="Type a message..." className="flex-1" />
-          <Button variant="ghost" size="icon-sm"><Sparkles className="h-4 w-4" /></Button>
-          <Button variant="glow" size="icon"><Send className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon-sm" aria-label="Attach file"><Plus className="h-4 w-4" /></Button>
+          <Input variant="glass" placeholder="Type a message..." className="flex-1" aria-label="Message" />
+          <Button variant="ghost" size="icon-sm" aria-label="Insert emoji"><Sparkles className="h-4 w-4" /></Button>
+          <Button variant="glow" size="icon" aria-label="Send message"><Send className="h-4 w-4" /></Button>
         </div>
       </div>
 

@@ -103,6 +103,8 @@ export function PreviewWrapper({ title, description, code, children, defaultDevi
         {/* Left: View toggle */}
         <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-muted/50 border border-border">
           <button
+            type="button"
+            aria-pressed={mode === "preview"}
             onClick={() => setMode("preview")}
             className={cn(
               "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all",
@@ -114,6 +116,8 @@ export function PreviewWrapper({ title, description, code, children, defaultDevi
             <Eye className="h-3.5 w-3.5" /> Preview
           </button>
           <button
+            type="button"
+            aria-pressed={mode === "code"}
             onClick={() => setMode("code")}
             className={cn(
               "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all",
@@ -135,6 +139,9 @@ export function PreviewWrapper({ title, description, code, children, defaultDevi
                 return (
                   <button
                     key={d}
+                    type="button"
+                    aria-label={`${d} preview`}
+                    aria-pressed={device === d && !previewWidth}
                     onClick={() => handleDeviceClick(d)}
                     className={cn(
                       "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all",
@@ -142,7 +149,6 @@ export function PreviewWrapper({ title, description, code, children, defaultDevi
                         ? "bg-background text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground"
                     )}
-                    title={d.charAt(0).toUpperCase() + d.slice(1)}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline capitalize">{d}</span>
@@ -198,8 +204,23 @@ export function PreviewWrapper({ title, description, code, children, defaultDevi
 
               {/* Right drag handle */}
               <div
+                role="separator"
+                aria-orientation="vertical"
+                aria-label="Resize preview"
+                aria-valuenow={currentWidth ?? undefined}
+                tabIndex={0}
                 onMouseDown={handleDragStart}
-                className="absolute top-0 -right-3 w-6 h-full flex items-center justify-center cursor-col-resize z-20 group"
+                onKeyDown={(event) => {
+                  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                  event.preventDefault();
+                  const container = containerRef.current;
+                  const max = (container?.clientWidth ?? 1200) - 24;
+                  const base = previewWidth ?? container?.clientWidth ?? 800;
+                  const delta = event.key === "ArrowRight" ? 40 : -40;
+                  setPreviewWidth(Math.max(280, Math.min(base + delta, max)));
+                  setDevice("desktop");
+                }}
+                className="absolute top-0 -right-3 w-6 h-full flex items-center justify-center cursor-col-resize z-20 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
               >
                 <div className={cn(
                   "w-1.5 h-16 rounded-full transition-colors",

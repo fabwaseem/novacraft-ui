@@ -66,7 +66,7 @@ export default function Blocks() {
   return (
     <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-border bg-card/30 overflow-y-auto scrollbar-thin shrink-0">
+      <aside aria-label="Block categories" className="w-64 border-r border-border bg-card/30 overflow-y-auto scrollbar-thin shrink-0">
         <div className="p-4">
           <h2 className="text-sm font-semibold text-foreground mb-1">Blocks</h2>
           <p className="text-xs text-muted-foreground mb-4">Pre-built UI sections ready to copy</p>
@@ -74,6 +74,8 @@ export default function Blocks() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
+                type="button"
+                aria-current={activeCategory === cat.id ? "page" : undefined}
                 onClick={() => setSearchParams({ cat: cat.id })}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
                   activeCategory === cat.id
@@ -91,7 +93,7 @@ export default function Blocks() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto scrollbar-thin">
+      <main id="main-content" className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="max-w-5xl mx-auto p-8 space-y-12">
           <motion.div key={activeCategory} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
             {activeCategory === "hero" && <HeroBlocks />}
@@ -1499,7 +1501,7 @@ function BannerBlocks() {
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           <span>🎉 <strong>NovaCraft v3.0</strong> is here — packed with new components and themes.</span>
           <Button variant="soft" size="xs" shape="pill">Learn more</Button>
-          <button className="ml-2 text-muted-foreground hover:text-foreground"><X className="h-3.5 w-3.5" /></button>
+          <button type="button" className="ml-2 text-muted-foreground hover:text-foreground" aria-label="Dismiss announcement"><X className="h-3.5 w-3.5" /></button>
         </div>
       </BlockWrapper>
 
